@@ -18,7 +18,6 @@ interface Comment {
   author: string;
   text: string;
 }
-
 type ApiResponse = {
   certificate: string;
   roast: string;
@@ -26,39 +25,18 @@ type ApiResponse = {
   deathCountdown: string;
 };
 
-
-const App: React.FC = () => {
+const App = () => {
   const [currentPage, setCurrentPage] = useState<'home' | 'roast' | 'leaderboard' | 'soulmate' | 'battle'>('home');
   const [currentShoe, setCurrentShoe] = useState<Shoe | null>(null);
   const [allShoes, setAllShoes] = useState<Shoe[]>([
-    {
-      id: '1',
-      name: 'Mike\'s Crusty Sneakers',
-      age: '25',
-      gender: 'Male',
-      image: 'https://images.pexels.com/photos/2529148/pexels-photo-2529148.jpeg?auto=compress&cs=tinysrgb&w=400',
-      roast: '🤢 YIKES! These shoes have achieved legendary status in the Museum of Foot Disasters. They\'re so rotten, even the bacteria are filing restraining orders! 💀',
-      smellScore: 87,
-      deathCountdown: '3 days, 14 hours'
-    },
-    {
-      id: '2',
-      name: 'Sarah\'s Death Boots',
-      age: '19',
-      gender: 'Female',
-      image: 'https://images.pexels.com/photos/1464625/pexels-photo-1464625.jpeg?auto=compress&cs=tinysrgb&w=400',
-      roast: '🚨 BIOHAZARD ALERT! 🚨 These boots have transcended footwear and become a weapon of mass destruction. The UN wants to ban them! 🌊💀',
-      smellScore: 95,
-      deathCountdown: '12 minutes'
-    }
+      
   ]);
   const [comments, setComments] = useState<Comment[]>([
-    { id: '1', shoeId: '1', author: 'BootHater69', text: '💀 Bro these make my gym socks look like perfume samples' },
-    { id: '2', shoeId: '2', author: 'NoseBleedQueen', text: '🤮 I can smell these through my screen wtf' }
-  ]);
+    ]);
   const [showCleaningModal, setShowCleaningModal] = useState(false);
   const [cleaningProgress, setCleaningProgress] = useState(0);
   const [cleaningStage, setCleaningStage] = useState('');
+  const [result, setResult] = useState<ApiResponse | null>(null);
   const [uploadForm, setUploadForm] = useState({
     name: '',
     age: '',
@@ -73,25 +51,28 @@ const App: React.FC = () => {
   const fileInputRef3 = useRef<HTMLInputElement>(null);
 
   const roastMessages = [
-    "💀 OH NO! These shoes have achieved maximum stank level. They're so rotten, even the rats moved out!",
-    "🤢 YIKES! Your shoes are so bad, they made the garbage truck do a U-turn. Impressive disaster level!",
-    "🚨 BIOHAZARD DETECTED! These shoes have transcended footwear and become a chemical weapon!",
-    "💀 Sweet mother of funk! These shoes are so crusty, archaeologists want to study them!",
-    "🌊 TSUNAMI WARNING! The smell waves from these shoes have been detected from space satellites!",
-    "🔥 Your shoes are so rotten, they make onions cry. That's a scientific achievement in nastiness!",
-    "💀 BREAKING: Local shoe achieves sentience, immediately files for emancipation from your feet!"
+    "💀 Your face looks like it was designed by a committee 🧑‍⚖️ that couldn’t agree on anything! 🤷",
+    "🥶 Every selfie you take is basically a jump scare.",
+    "💔 Even Face ID refuses to recognize you — said it was ‘too disturbing.’",
+    "🔥 Bro, your forehead’s so big 🏔️ it’s got its own zip code! 🏠.",
+    "💔 Your mom saw your face and said: ‘delivery failed 📦, return to sender ↩️’",
+    "😵 Your face screams : ‘try again in the next life 💀🔁",
+    "🤦 Your face looks like life hit ⌨️ Ctrl+Z on you... ❌ but forgot 🔄 to redo 💀",
+    "👶 When you were born, the doctor didn’t say “it’s a boy/girl.” 🙅‍♂️🩺 He said 'Oh no.'",
+    "🧴 This face needs Photoshop 🎨, not facewash 🚿",
+    "😬 Warning: Applying Fair & Lovely may cause depression 😭 after seeing no results on you 🚫",
   ];
 
   const cleaningStages = [
     "Scanning for signs of life... 🔍",
     "Negotiating with the fungi... 🍄",
     "Applying industrial-strength Febreze... 🌪️",
-    "Consulting the Shoe Priest... 🙏",
-    "Summoning shoe angels... 👼",
+    "Consulting the Priest... 🙏",
+    "Summoning angels... 👼",
     "Attempting reverse exorcism... 😈",
     "Calling NASA for backup... 🚀",
     "Petitioning the UN for help... 🌍",
-    "SYSTEM FAILURE: SHOES BEYOND SALVATION... 💀"
+    "SYSTEM FAILURE: BEYOND SALVATION... 💀"
   ];
 
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>, callback: (url: string) => void) => {
@@ -124,58 +105,22 @@ const App: React.FC = () => {
     ];
     return options[Math.floor(Math.random() * options.length)];
   };
-    const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [result, setResult] = useState<ApiResponse | null>(null);
-  const handleFormSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!uploadForm.image) return;
-e.preventDefault();
-    if (!uploadForm.image) return;
-    setLoading(true);
-    setError(null);
-    setResult(null);
 
-    try {
-  const res = await fetch("https://hackathon-ai-api-87ti.onrender.com/roast", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      name: uploadForm.name,
-      age: Number(uploadForm.age),
+  const handleFormSubmit = (e: React.FormEvent) => {
+    const newShoe: Shoe = {
+      id: Date.now().toString(),
+      name: `${uploadForm.name}'s Zombie Face`,
+      age: uploadForm.age,
       gender: uploadForm.gender,
-    }),
-  });
+      image: uploadForm.image,
+      roast: generateRoast(),
+      smellScore: generateSmellScore(),
+      deathCountdown: generateDeathCountdown()
+    };
 
-  if (!res.ok) {
-    const text = await res.text().catch(() => "");
-    throw new Error(`Request failed (${res.status}). ${text}`);
-  }
-
-  const data: ApiResponse = await res.json();
-  setResult(data);
-
-  const newShoe: Shoe = {
-    id: Date.now().toString(),
-    name: `${uploadForm.name}'s Disaster Shoes`,
-    age: uploadForm.age,
-    gender: uploadForm.gender,
-    image: uploadForm.image,
-    roast: data.roast,
-    smellScore: data.smellScore,
-    deathCountdown: data.deathCountdown
-  };
-
-  setCurrentShoe(newShoe);
-  setAllShoes(prev => [newShoe, ...prev]);
-  setCurrentPage('roast');
-} catch (err: any) {
-  setError(err?.message || "Something went wrong.");
-} finally {
-  setLoading(false);
-}
-
-
+    setCurrentShoe(newShoe);
+    setAllShoes(prev => [newShoe, ...prev]);
+    setCurrentPage('roast');
   };
 
   const startCleaning = () => {
@@ -195,7 +140,8 @@ e.preventDefault();
         if (next >= 100) {
           clearInterval(interval);
           setTimeout(() => {
-            setCleaningStage("❌ MISSION FAILED: Your shoes have defeated our cleaning algorithm! 💀");
+            setCleaningStage("💥⚠️ SYSTEM ERROR 404: Filter Applying algorithm self-destructed 🤯🚨😭 Please send help 🛑🤖💻");
+
           }, 1000);
         }
         
@@ -210,14 +156,14 @@ e.preventDefault();
     // Create a fake download experience
     const link = document.createElement('a');
     link.href = 'data:text/plain;charset=utf-8,' + encodeURIComponent(
-      `🏆 OFFICIAL CERTIFICATE OF SHOE DISGUST 🏆\n\n` +
+      `🏆 OFFICIAL CERTIFICATE OF FACE DISGUST 🏆\n\n` +
       `This certifies that ${currentShoe.name} have been officially recognized as\n` +
-      `ABSOLUTELY DISGUSTING by the International Board of Foot Disasters.\n\n` +
-      `Smell Score: ${currentShoe.smellScore}/100 (Biohazard Level)\n` +
+      `ABSOLUTELY DISGUSTING by the International Board of Face Disgrace.\n\n` +
+      `Smell Score: ${currentShoe.smellScore}/100 (1000 feet apart level)\n` +
       `Status: BEYOND SALVATION\n` +
-      `Recommendation: Immediate disposal via rocket launch into sun\n\n` +
-      `Signed: Dr. Stinkfoot McRottenSole\n` +
-      `Chief Shoe Disgust Officer 💀👟`
+      `Recommendation: Immediate blur — this face is not safe for 4K 📸💀\n\n` +
+      `Signed: Prof. Uglystein von DisasterFace 🤓💀\n` +
+      `Chief Face Disgrace Officer 💀👟`
     );
     link.download = `${currentShoe.name}-disgust-certificate.txt`;
     document.body.appendChild(link);
@@ -250,7 +196,7 @@ e.preventDefault();
     
     setTimeout(() => {
       setBattleWinner(null);
-    }, 5000);
+    }, 10000);
   };
 
   useEffect(() => {
@@ -268,14 +214,14 @@ e.preventDefault();
   return (
     <div className="min-h-screen bg-gradient-to-br from-lime-400 via-yellow-300 to-red-500 font-comic relative overflow-x-hidden">
       {/* Floating Flies */}
-      <div className="fly fixed text-2xl animate-pulse z-10">🪰</div>
-      <div className="fly fixed text-2xl animate-bounce z-10" style={{left: '20%'}}>🪰</div>
-      <div className="fly fixed text-2xl animate-ping z-10" style={{left: '80%'}}>🪰</div>
+      <div className="fly fixed text-2xl animate-pulse z-10">🧟</div>
+      <div className="fly fixed text-2xl animate-bounce z-10" style={{left: '20%'}}>🧟</div>
+      <div className="fly fixed text-2xl animate-ping z-10" style={{left: '80%'}}>🧟</div>
       
       {/* Hazard Tape Header */}
       <div className="bg-yellow-400 border-t-8 border-b-8 border-black border-dashed py-2">
         <div className="text-center text-black font-bold text-xl animate-pulse">
-          ⚠️ CAUTION: EXTREME SHOE ROASTING ZONE ⚠️
+          ⚠️ Caution: Self-esteem not refundable. ⚠️
         </div>
       </div>
 
@@ -284,14 +230,14 @@ e.preventDefault();
         <div className="max-w-6xl mx-auto flex justify-between items-center">
           <h1 className="text-4xl font-bold text-yellow-300 animate-pulse cursor-pointer"
               onClick={() => setCurrentPage('home')}>
-            👟💀 ROTTEN SHOE TRACKER 💀👟
+            👶UGLY FACE DETECTOR💀
           </h1>
           <div className="flex space-x-4">
             {[
-              { id: 'home', icon: Home, label: 'ROAST ME' },
+              { id: 'home', icon: Home, label: 'FACE THE TRUTH' },
               { id: 'leaderboard', icon: Trophy, label: 'HALL OF SHAME' },
-              { id: 'soulmate', icon: Heart, label: 'STINK MATCH' },
-              { id: 'battle', icon: Swords, label: 'SHOE WAR' }
+              { id: 'soulmate', icon: Heart, label: 'SOUL MATCH' },
+              { id: 'battle', icon: Swords, label: 'FACE OFF' }
             ].map(({ id, icon: Icon, label }) => (
               <button
                 key={id}
@@ -316,10 +262,10 @@ e.preventDefault();
           <div className="text-center">
             <div className="bg-red-600 border-8 border-yellow-400 rounded-3xl p-8 mb-8 shadow-2xl transform hover:scale-105 transition-all duration-300">
               <h2 className="text-6xl font-bold text-yellow-300 mb-4 animate-pulse">
-                🤢 SHOW US YOUR ROTTEN SHOES 🤢
+                🤢 SHOW GROSS FACE 🤢
               </h2>
               <p className="text-2xl text-white mb-2">
-                ⚠️ WARNING: FEELINGS WILL BE HURT ⚠️
+                ⚠️ WARNING: YOUR EGO MAY NOT SURVIVE THIS ⚠️
               </p>
               <p className="text-lg text-yellow-200">
                 💀 Prepare for maximum roasting. No mercy. No survivors. 💀
@@ -377,7 +323,7 @@ e.preventDefault();
                   <div className="text-center">
                     <Upload size={64} className="mx-auto text-yellow-400 mb-4 animate-bounce" />
                     <h3 className="text-3xl font-bold text-yellow-400 mb-4">
-                      📸 UPLOAD YOUR FOOT DISASTER 📸
+                      📸 UPLOAD YOUR TRAGIC FACE 📸
                     </h3>
                     <input
                       type="file"
@@ -414,7 +360,7 @@ e.preventDefault();
 
             <div className="mt-8 bg-yellow-400 border-4 border-red-600 rounded-xl p-4">
               <p className="text-red-600 font-bold text-sm">
-                📜 LEGAL DISCLAIMER: This site is not responsible for hurt feelings, shoe-related breakups, or existential crises about your footwear choices. 💀
+                📜 LEGAL DISCLAIMER: This site is not responsible for hurt feelings, broken mirrors, or existential crises about your face. 💀
               </p>
             </div>
           </div>
@@ -434,7 +380,7 @@ e.preventDefault();
               {/* Shoe Image */}
               <div className="bg-green-500 border-8 border-red-600 rounded-3xl p-6">
                 <h3 className="text-3xl font-bold text-white text-center mb-4">
-                  👟 THE ACCUSED FOOTWEAR 👟
+                  👟 THE ACCUSED FACE 👟
                 </h3>
                 <div className="relative">
                   <img 
@@ -482,7 +428,7 @@ e.preventDefault();
                     </div>
                   </div>
                   <p className="text-yellow-400 font-bold">
-                    {currentShoe.smellScore}/100 - BIOHAZARD LEVEL!
+                    {currentShoe.smellScore}/100- Self Esteem Damage Index 📉!
                   </p>
                 </div>
               </div>
@@ -492,7 +438,7 @@ e.preventDefault();
                 <div className="text-center">
                   <Clock size={48} className="mx-auto text-white mb-4 animate-pulse" />
                   <h4 className="text-2xl font-bold text-white mb-4">
-                    ⏰ TIME UNTIL SHOE DEATH ⏰
+                    ⏰ NEXT PLASTIC SURGERY ESTIMATE 🏥🔪
                   </h4>
                   <div className="bg-red-600 text-yellow-400 p-4 rounded-xl border-4 border-yellow-400">
                     <p className="text-lg font-bold">
@@ -526,13 +472,13 @@ e.preventDefault();
                 onClick={startCleaning}
                 className="bg-green-500 text-white px-8 py-4 text-2xl font-bold rounded-full border-4 border-yellow-400 hover:bg-green-400 hover:scale-110 transition-all duration-300 animate-bounce"
               >
-                🧽 TRY TO CLEAN THIS DISASTER 🧽
+                🧽 TRY TO APPLY FILTER 🧽
               </button>
               <button
                 onClick={() => setCurrentPage('soulmate')}
                 className="bg-pink-500 text-white px-8 py-4 text-2xl font-bold rounded-full border-4 border-yellow-400 hover:bg-pink-400 hover:scale-110 transition-all duration-300 animate-pulse"
               >
-                💕 FIND MY STINK SOULMATE 💕
+                💕 FIND MY SOUL MATCH 💕
               </button>
             </div>
           </div>
@@ -545,7 +491,7 @@ e.preventDefault();
               <h2 className="text-5xl font-bold text-red-600 animate-pulse">
                 🏆 HALL OF SHAME LEADERBOARD 🏆
               </h2>
-              <p className="text-2xl text-red-600 mt-2">💀 The Most Disgusting Shoes Ever Uploaded 💀</p>
+              <p className="text-2xl text-red-600 mt-2">💀 The Most Disgusting Faces Ever Seen 💀</p>
             </div>
 
             <div className="space-y-6">
@@ -598,6 +544,7 @@ e.preventDefault();
                           </div>
                         ))}
                     </div>
+                    
                   </div>
                 </div>
               ))}
@@ -610,9 +557,9 @@ e.preventDefault();
           <div className="space-y-8">
             <div className="text-center bg-pink-500 border-8 border-yellow-400 rounded-3xl p-6">
               <h2 className="text-5xl font-bold text-yellow-400 animate-pulse">
-                💕 ROTTEN SHOE SOULMATE FINDER 💕
+                💕 YOUR ZOMBIE TWIN MATCHER 💕
               </h2>
-              <p className="text-2xl text-white mt-2">🤢 Two Soles, One Fungus 🤢</p>
+              <p className="text-2xl text-white mt-2">🤢 Two Souls, One Regret 🤢</p>
             </div>
 
             {currentShoe ? (
@@ -625,7 +572,7 @@ e.preventDefault();
                   const soulmate = findSoulmate();
                   if (!soulmate) return (
                     <p className="text-center text-white text-xl">
-                      💔 No other shoes are gross enough to match yours! You're in a league of your own! 💔
+                      💔 No other face is tragic enough to match yours! You’re suffering in a league of your own 💔
                     </p>
                   );
 
@@ -653,7 +600,7 @@ e.preventDefault();
                           <div className="text-xl font-bold">STINK MATCH!</div>
                         </div>
                         <p className="text-yellow-400 font-bold mt-4 text-xl">
-                          💕 IT'S A FUNGAL LOVE STORY! 💕
+                          💕 IT'S A JUMPSCARE ROMANCE! 💕
                         </p>
                       </div>
 
@@ -675,23 +622,23 @@ e.preventDefault();
                 <div className="mt-8 bg-yellow-400 text-red-600 p-6 rounded-xl border-4 border-red-600 text-center">
                   <h4 className="text-2xl font-bold mb-4">💌 ROMANTIC COMPATIBILITY REPORT 💌</h4>
                   <p className="text-lg font-bold">
-                    🌹 "When two rotten soles meet, the stench of love fills the air! Your shoes are perfectly matched in their mutual disgust. Together, you could clear entire buildings!" 🌹
+                    🌹 “When two cursed faces meet, the universe glitches. Together, you could crash mirrors, shut down cameras, and make Photoshop cry. A true nightmare couple!” 🌹
                   </p>
                 </div>
               </div>
             ) : (
               <div className="text-center bg-red-600 border-8 border-yellow-400 rounded-3xl p-8">
                 <h3 className="text-3xl font-bold text-yellow-400 mb-4">
-                  💔 NO SHOE TO MATCH! 💔
+                  💔 NO FACE TO MATCH! 💔
                 </h3>
                 <p className="text-white text-xl mb-6">
-                  You need to upload a rotten shoe first before finding your soulmate!
+                  You need to upload a rotten face first before finding your soulmate!
                 </p>
                 <button
                   onClick={() => setCurrentPage('home')}
                   className="bg-yellow-400 text-red-600 px-8 py-4 text-xl font-bold rounded-full border-4 border-red-600 hover:bg-yellow-300 hover:scale-110 transition-all duration-300"
                 >
-                  🤢 UPLOAD DISASTER SHOES 🤢
+                  🤢 UPLOAD HIDEOUS FACES 🤢
                 </button>
               </div>
             )}
@@ -703,16 +650,16 @@ e.preventDefault();
           <div className="space-y-8">
             <div className="text-center bg-red-600 border-8 border-yellow-400 rounded-3xl p-6">
               <h2 className="text-5xl font-bold text-yellow-400 animate-pulse">
-                ⚔️ SHOE BATTLE ARENA ⚔️
+                ⚔️ FACE OFF ARENA ⚔️
               </h2>
-              <p className="text-2xl text-white mt-2">💀 Only the most disgusting shoe survives! 💀</p>
+              <p className="text-2xl text-white mt-2">💀 Only the most disgusting profile survives! 💀</p>
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
               {/* Battle Station 1 */}
               <div className="bg-blue-500 border-8 border-yellow-400 rounded-3xl p-6">
                 <h3 className="text-3xl font-bold text-yellow-400 text-center mb-4">
-                  👟 FIGHTER 1 👟
+                   FIGHTER 1 ⚔️
                 </h3>
                 {battleShoe1 ? (
                   <div className="text-center">
@@ -740,7 +687,7 @@ e.preventDefault();
                         onChange={(e) => handleImageUpload(e, (url) => {
                           const newShoe: Shoe = {
                             id: Date.now().toString() + '1',
-                            name: `Battle Shoe 1`,
+                            name: `Battle Face 1`,
                             age: '25',
                             gender: 'Unknown',
                             image: url,
@@ -767,7 +714,7 @@ e.preventDefault();
               {/* Battle Station 2 */}
               <div className="bg-green-500 border-8 border-yellow-400 rounded-3xl p-6">
                 <h3 className="text-3xl font-bold text-yellow-400 text-center mb-4">
-                  👟 FIGHTER 2 👟
+                  FIGHTER 2 ⚔️
                 </h3>
                 {battleShoe2 ? (
                   <div className="text-center">
@@ -795,7 +742,7 @@ e.preventDefault();
                         onChange={(e) => handleImageUpload(e, (url) => {
                           const newShoe: Shoe = {
                             id: Date.now().toString() + '2',
-                            name: `Battle Shoe 2`,
+                            name: `Battle Face 2`,
                             age: '25',
                             gender: 'Unknown',
                             image: url,
@@ -842,7 +789,7 @@ e.preventDefault();
                   💀 {battleWinner} WINS BY PURE DISGUST! 💀
                 </p>
                 <p className="text-lg text-red-600 mt-4">
-                  🎉 The crowd goes wild! (Then immediately evacuates due to the smell) 🎉
+                  🎉 The crowd goes wild! (Then immediately evacuates after seeing your face) 🎉
                 </p>
                 {/* Confetti effect */}
                 <div className="text-6xl animate-bounce">🎊💀🎊</div>
@@ -901,10 +848,10 @@ e.preventDefault();
       <footer className="bg-black border-t-8 border-yellow-400 p-6 mt-12">
         <div className="max-w-6xl mx-auto text-center">
           <p className="text-yellow-400 text-lg font-bold mb-2">
-            💀 ROTTEN SHOE TRACKER - WHERE FOOTWEAR COMES TO DIE 💀
+            💀 UGLY FACE DETECTOR: One Selfie and your mirror files for retirement 💀
           </p>
           <p className="text-white text-sm">
-            📜 Not responsible for hurt feelings, shoe-related breakups, or sudden urges to buy new footwear
+            📜 Not responsible for hurt feelings 💔, u being mistaken for a zombie 🧟, or sudden urges to delete all selfies📵
           </p>
           <p className="text-yellow-400 text-xs mt-2">
             🪰 Flies included free of charge 🪰
