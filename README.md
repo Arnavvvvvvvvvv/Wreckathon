@@ -2,14 +2,14 @@
 
 # 🤢 Ugly Face Detector 💀
 
-An over-the-top **React app** that lets users upload their picture, get roasted, and receive a hilarious "self-esteem damage report."
+An over-the-top completely useless **React app** that lets users upload their picture, get roasted, and receive a hilarious "self-esteem damage report."
 
 ⚠️ **Warning:** May cause uncontrollable laughter, broken egos, and irreversible self-doubt.
 
 ---
 
 ## 🎥 Demo Video Link  
-- 🔗 **Video Link:** [Demo Video Link](https://www.youtube.com/watch?v=8bl-klCOxPM))  
+- 🔗 **Video Link:** [Demo Video Link](https://youtu.be/NOcxshBeBX0?si=YrxTgSScx8vLYCfh)  
 
 ---
 
@@ -90,4 +90,5 @@ This project is purely for **fun and entertainment**.
 We are not responsible for destroyed egos, broken mirrors, or existential crises.
 
 ---
+
 
