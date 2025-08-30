@@ -188,16 +188,17 @@ const App = () => {
   };
 
   const battleShoes = () => {
-    if (!battleShoe1 || !battleShoe2) return;
-    
-    // Winner is the shoe with higher smell score (worse shoe wins!)
-    const winner = battleShoe1.smellScore > battleShoe2.smellScore ? battleShoe1.name : battleShoe2.name;
-    setBattleWinner(winner);
-    
-    setTimeout(() => {
-      setBattleWinner(null);
-    }, 10000);
-  };
+  if (!battleShoe1 || !battleShoe2) return;
+
+  // Winner ko random choose karna
+  const winner = Math.random() < 0.5 ? battleShoe1.name : battleShoe2.name;
+  setBattleWinner(winner);
+
+  setTimeout(() => {
+    setBattleWinner(null);
+  }, 10000);
+};
+
 
   useEffect(() => {
     // Add some floating flies animation
