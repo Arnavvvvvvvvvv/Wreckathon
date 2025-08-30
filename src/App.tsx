@@ -189,31 +189,31 @@ const App = () => {
     setComments(prev => [...prev, newComment]);
   };
 
- const battleShoes = () => {
+const battleShoes = () => {
   if (!battleShoe1 || !battleShoe2) return;
 
   let winnerName = "";
+  let upset = false;
 
   if (battleShoe1.smellScore > battleShoe2.smellScore) {
     winnerName = battleShoe1.name;
   } else if (battleShoe2.smellScore > battleShoe1.smellScore) {
     winnerName = battleShoe2.name;
   } else {
-    // Agar dono equal hain toh random kar sakte
+    // Agar equal ho toh random
     winnerName = Math.random() < 0.5 ? battleShoe1.name : battleShoe2.name;
+  }
+
+  // Check for upset (agar jeetne wale ka score actually chhota tha)
+  if (
+    (winnerName === battleShoe1.name && battleShoe1.smellScore < battleShoe2.smellScore) ||
+    (winnerName === battleShoe2.name && battleShoe2.smellScore < battleShoe1.smellScore)
+  ) {
+    upset = true;
   }
 
   setBattleWinner(winnerName);
 
-  setTimeout(() => {
-    setBattleWinner(null);
-  }, 10000);
-};
-
-
-  setBattleWinner(winnerName);
-
-  // Extra fun message if upset happened
   if (upset) {
     console.log("🔥 SHOCKER! The uglier face LOST despite higher stink!");
   }
@@ -222,6 +222,7 @@ const App = () => {
     setBattleWinner(null);
   }, 10000);
 };
+
 
 
   useEffect(() => {
