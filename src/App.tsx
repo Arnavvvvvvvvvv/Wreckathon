@@ -808,17 +808,12 @@ const battleShoes = () => {
 
             {/* Battle Result */}
             {battleWinner && (
-              <div className="text-center bg-yellow-400 border-8 border-red-600 rounded-3xl p-8 animate-bounce">
-                <h3 className="text-4xl font-bold text-red-600 mb-4">
-                  🏆 VICTORY! 🏆
-                </h3>
-                <p className="text-2xl font-bold text-red-600">
-                  💀 {battleWinner} WINS BY PURE DISGUST! 💀
-                </p>
-                <p className="text-lg text-red-600 mt-4">
-                  🎉 The crowd goes wild! (Then immediately evacuates after seeing your face) 🎉
-                </p>
-                {battleWinner.upset && (
+  <div className="text-center mt-4">
+    <h2 className="text-3xl font-bold text-red-600">🏆 VICTORY! 🏆</h2>
+    <p className="text-xl">
+      💀 {battleWinner.name} WINS BY PURE DISGUST! 💀
+    </p>
+    {battleWinner.upset && (
       <p className="text-yellow-500 text-lg font-bold mt-2">
         🔥 SHOCKER! Despite having LOWER stink, they still won! 🔥
       </p>
@@ -826,12 +821,9 @@ const battleShoes = () => {
     <p className="text-sm mt-2">
       (Scores: {battleWinner.score1} vs {battleWinner.score2})
     </p>
-                {/* Confetti effect */}
-                <div className="text-6xl animate-bounce">🎊💀🎊</div>
-              </div>
-            )}
-          </div>
-        )}
+  </div>
+)}
+
       </main>
 
       {/* Cleaning Modal */}
