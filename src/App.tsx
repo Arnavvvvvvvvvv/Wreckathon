@@ -192,20 +192,38 @@ const App = () => {
   const battleShoes = () => {
   if (!battleShoe1 || !battleShoe2) return;
 
-  const total = battleShoe1.smellScore + battleShoe2.smellScore;
-  const randomValue = Math.random() * total;
+  let winnerName = "";
+  let upset = false;
 
-  // Winner is chosen with probability proportional to their smellScore
-  const winnerName = randomValue < battleShoe1.smellScore
-    ? battleShoe1.name
-    : battleShoe2.name;
+  if (battleShoe1.smellScore === battleShoe2.smellScore) {
+    // Same stink → pure random
+    winnerName = Math.random() < 0.5 ? battleShoe1.name : battleShoe2.name;
+  } else {
+    // Normally higher stink wins
+    const higher = battleShoe1.smellScore > battleShoe2.smellScore ? battleShoe1 : battleShoe2;
+    const lower = higher === battleShoe1 ? battleShoe2 : battleShoe1;
+
+    // 95% chance higher wins, 5% chance upset
+    if (Math.random() < 0.95) {
+      winnerName = higher.name;
+    } else {
+      winnerName = lower.name;
+      upset = true;
+    }
+  }
 
   setBattleWinner(winnerName);
+
+  // Extra fun message if upset happened
+  if (upset) {
+    console.log("🔥 SHOCKER! The uglier face LOST despite higher stink!");
+  }
 
   setTimeout(() => {
     setBattleWinner(null);
   }, 10000);
 };
+
 
   useEffect(() => {
     const flies = document.querySelectorAll('.fly');
