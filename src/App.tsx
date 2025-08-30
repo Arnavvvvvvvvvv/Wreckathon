@@ -149,7 +149,7 @@ const App = () => {
         
         return Math.min(next, 100);
       });
-    }, 800);
+    }, 2000);
   };
 
   const downloadCertificate = () => {
