@@ -61,6 +61,8 @@ const App = () => {
     "👶 When you were born, the doctor didn’t say “it’s a boy/girl.” 🙅‍♂️🩺 He said 'Oh no.'",
     "🧴 This face needs Photoshop 🎨, not facewash 🚿",
     "😬 Warning: Applying Fair & Lovely may cause depression 😭 after seeing no results on you 🚫",
+    "😬 Face not made for modeling… try Radio Jockey.💀",
+    "🔥 Perfect for horror movies, no makeup budget required.”
   ];
 
   const cleaningStages = [
@@ -190,9 +192,19 @@ const App = () => {
   const battleShoes = () => {
   if (!battleShoe1 || !battleShoe2) return;
 
-  // Winner ko random choose karna
-  const winner = Math.random() < 0.5 ? battleShoe1.name : battleShoe2.name;
-  setBattleWinner(winner);
+  let winnerName: string;
+
+  // 50% chance = purely random
+  if (Math.random() < 0.5) {
+    winnerName = Math.random() < 0.5 ? battleShoe1.name : battleShoe2.name;
+  } else {
+    // 50% chance = higher smellScore wins
+    winnerName = battleShoe1.smellScore > battleShoe2.smellScore
+      ? battleShoe1.name
+      : battleShoe2.name;
+  }
+
+  setBattleWinner(winnerName);
 
   setTimeout(() => {
     setBattleWinner(null);
@@ -200,8 +212,8 @@ const App = () => {
 };
 
 
+
   useEffect(() => {
-    // Add some floating flies animation
     const flies = document.querySelectorAll('.fly');
     flies.forEach((fly, index) => {
       setInterval(() => {
