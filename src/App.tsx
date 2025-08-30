@@ -192,17 +192,13 @@ const App = () => {
   const battleShoes = () => {
   if (!battleShoe1 || !battleShoe2) return;
 
-  let winnerName: string;
+  const total = battleShoe1.smellScore + battleShoe2.smellScore;
+  const randomValue = Math.random() * total;
 
-  // 50% chance = purely random
-  if (Math.random() < 0.5) {
-    winnerName = Math.random() < 0.5 ? battleShoe1.name : battleShoe2.name;
-  } else {
-    // 50% chance = higher smellScore wins
-    winnerName = battleShoe1.smellScore > battleShoe2.smellScore
-      ? battleShoe1.name
-      : battleShoe2.name;
-  }
+  // Winner is chosen with probability proportional to their smellScore
+  const winnerName = randomValue < battleShoe1.smellScore
+    ? battleShoe1.name
+    : battleShoe2.name;
 
   setBattleWinner(winnerName);
 
@@ -210,8 +206,6 @@ const App = () => {
     setBattleWinner(null);
   }, 10000);
 };
-
-
 
   useEffect(() => {
     const flies = document.querySelectorAll('.fly');
