@@ -189,28 +189,27 @@ const App = () => {
     setComments(prev => [...prev, newComment]);
   };
 
-  const battleShoes = () => {
+ const battleShoes = () => {
   if (!battleShoe1 || !battleShoe2) return;
 
   let winnerName = "";
-  let upset = false;
 
-  if (battleShoe1.smellScore === battleShoe2.smellScore) {
-    // Same stink → pure random
-    winnerName = Math.random() < 0.5 ? battleShoe1.name : battleShoe2.name;
+  if (battleShoe1.smellScore > battleShoe2.smellScore) {
+    winnerName = battleShoe1.name;
+  } else if (battleShoe2.smellScore > battleShoe1.smellScore) {
+    winnerName = battleShoe2.name;
   } else {
-    // Normally higher stink wins
-    const higher = battleShoe1.smellScore > battleShoe2.smellScore ? battleShoe1 : battleShoe2;
-    const lower = higher === battleShoe1 ? battleShoe2 : battleShoe1;
-
-    // 95% chance higher wins, 5% chance upset
-    if (Math.random() < 0.95) {
-      winnerName = higher.name;
-    } else {
-      winnerName = lower.name;
-      upset = true;
-    }
+    // Agar dono equal hain toh random kar sakte
+    winnerName = Math.random() < 0.5 ? battleShoe1.name : battleShoe2.name;
   }
+
+  setBattleWinner(winnerName);
+
+  setTimeout(() => {
+    setBattleWinner(null);
+  }, 10000);
+};
+
 
   setBattleWinner(winnerName);
 
