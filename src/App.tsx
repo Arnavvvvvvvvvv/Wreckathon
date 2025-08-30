@@ -189,43 +189,9 @@ const App = () => {
     setComments(prev => [...prev, newComment]);
   };
 
-const battleShoes = () => {
-  if (!battleShoe1 || !battleShoe2) return;
-
-  let winner = null;
-  let upset = false;
-
-  if (battleShoe1.smellScore > battleShoe2.smellScore) {
-    winner = battleShoe1;
-  } else if (battleShoe2.smellScore > battleShoe1.smellScore) {
-    winner = battleShoe2;
-  } else {
-    // equal hone par random pick
-    winner = Math.random() < 0.5 ? battleShoe1 : battleShoe2;
-  }
-
-  // upset check: agar winner ka score chhota hai
-  if (
-    (winner === battleShoe1 && battleShoe1.smellScore < battleShoe2.smellScore) ||
-    (winner === battleShoe2 && battleShoe2.smellScore < battleShoe1.smellScore)
-  ) {
-    upset = true;
-  }
-
-  setBattleWinner({
-    name: winner.name,
-    upset,
-    score1: battleShoe1.smellScore,
-    score2: battleShoe2.smellScore
-  });
-
-  setTimeout(() => {
-    setBattleWinner(null);
-  }, 10000);
-};
-
-
-
+const battleShoes = () => { if (!battleShoe1 || !battleShoe2) return; let winnerName: string; // 50% chance = purely random 
+                           if (Math.random() < 0.5) { winnerName = Math.random() < 0.5 ? battleShoe1.name : battleShoe2.name; } else { // 50% chance = higher smellScore wins 
+                             winnerName = battleShoe1.smellScore > battleShoe2.smellScore ? battleShoe1.name : battleShoe2.name; } setBattleWinner(winnerName); setTimeout(() => { setBattleWinner(null); }, 10000); };
 
   useEffect(() => {
     const flies = document.querySelectorAll('.fly');
