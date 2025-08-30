@@ -192,36 +192,38 @@ const App = () => {
 const battleShoes = () => {
   if (!battleShoe1 || !battleShoe2) return;
 
-  let winnerName = "";
+  let winner = null;
   let upset = false;
 
   if (battleShoe1.smellScore > battleShoe2.smellScore) {
-    winnerName = battleShoe1.name;
+    winner = battleShoe1;
   } else if (battleShoe2.smellScore > battleShoe1.smellScore) {
-    winnerName = battleShoe2.name;
+    winner = battleShoe2;
   } else {
-    // Agar equal ho toh random
-    winnerName = Math.random() < 0.5 ? battleShoe1.name : battleShoe2.name;
+    // equal hone par random pick
+    winner = Math.random() < 0.5 ? battleShoe1 : battleShoe2;
   }
 
-  // Check for upset (agar jeetne wale ka score actually chhota tha)
+  // upset check: agar winner ka score chhota hai
   if (
-    (winnerName === battleShoe1.name && battleShoe1.smellScore < battleShoe2.smellScore) ||
-    (winnerName === battleShoe2.name && battleShoe2.smellScore < battleShoe1.smellScore)
+    (winner === battleShoe1 && battleShoe1.smellScore < battleShoe2.smellScore) ||
+    (winner === battleShoe2 && battleShoe2.smellScore < battleShoe1.smellScore)
   ) {
     upset = true;
   }
 
-  setBattleWinner(winnerName);
-
-  if (upset) {
-    console.log("🔥 SHOCKER! The uglier face LOST despite higher stink!");
-  }
+  setBattleWinner({
+    name: winner.name,
+    upset,
+    score1: battleShoe1.smellScore,
+    score2: battleShoe2.smellScore
+  });
 
   setTimeout(() => {
     setBattleWinner(null);
   }, 10000);
 };
+
 
 
 
@@ -816,6 +818,14 @@ const battleShoes = () => {
                 <p className="text-lg text-red-600 mt-4">
                   🎉 The crowd goes wild! (Then immediately evacuates after seeing your face) 🎉
                 </p>
+                {battleWinner.upset && (
+      <p className="text-yellow-500 text-lg font-bold mt-2">
+        🔥 SHOCKER! Despite having LOWER stink, they still won! 🔥
+      </p>
+    )}
+    <p className="text-sm mt-2">
+      (Scores: {battleWinner.score1} vs {battleWinner.score2})
+    </p>
                 {/* Confetti effect */}
                 <div className="text-6xl animate-bounce">🎊💀🎊</div>
               </div>
